@@ -153,7 +153,7 @@ class Validator implements ValidatorContract
      *
      * @var bool
      */
-    protected $stopOnFirstFailure = false;
+    protected $stopOnFirstFailure = true;
 
     /**
      * All of the custom validator extensions.
@@ -558,12 +558,9 @@ class Validator implements ValidatorContract
         // we will call the validation method with the attribute. If a method returns false the
         // attribute is invalid and we will add a failure message for this failing attribute.
         $validatable = $this->isValidatable($rule, $attribute, $value);
-        
-        cemre($this);
-        exit;
 
-        $ruleClass = sprintf('%s\\%s', 2, $rule);
-        
+        $ruleClass = sprintf('%s%s\\%s', $this->container->getNamespace(), 'Rules', $rule);
+
         if (class_exists($ruleClass)) {
             return $validatable
                     ? $this->validateUsingCustomRule($attribute, $value, new $ruleClass($parameters, $this->data, $this->initialRules))
